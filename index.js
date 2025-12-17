@@ -2,22 +2,27 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
+const hostname = "0.0.0.0";
 // Load config from file if it exists
-const configPath = process.env.CONFIG_PATH || "/app/config/config.json";
+let configPath = process.env.CONFIG_PATH || "/app/config/config.json";
 
 try {
   if (fs.existsSync(configPath)) {
-    console.log(`Loading config from ${configPath}`);
-    const configFile = fs.readFileSync(configPath, "utf-8");
-    const config = JSON.parse(configFile);
+    // If it's a directory, try config.json inside it
+    if (fs.lstatSync(configPath).isDirectory()) {
+      configPath = path.join(configPath, "config.json");
+    }
 
-    // Merge config into process.env
-    // Existing env vars take precedence? Or config file?
-    // User request: "pass env values from that".
-    // Usually config mount overrides or supplements.
-    // Let's implement providing defaults or overrides.
-    // Common pattern: config file is the source of truth for declared vars.
-    Object.assign(process.env, config);
+    if (fs.existsSync(configPath)) {
+      console.log(`Loading config from ${configPath}`);
+      const configFile = fs.readFileSync(configPath, "utf-8");
+      const config = JSON.parse(configFile);
+      Object.assign(process.env, config);
+    } else {
+      console.log(
+        `No config file found at ${configPath}, using environment variables.`
+      );
+    }
   } else {
     console.log(
       `No config file found at ${configPath}, using environment variables.`
@@ -27,7 +32,6 @@ try {
   console.error("Error reading config file:", error);
 }
 
-const hostname = "0.0.0.0";
 const port = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
