@@ -1,13 +1,7 @@
 name: test-env_container-dev_app_0dda965_env_a60fd27 Pipeline (Skyu Generated)
 'on':
   schedule:
-    branches:
-      - main
-    paths-ignore:
-      - .github/workflows/**
-      - .trivyignore
-      - Readme.md
-      - README.md
+    - cron: asdsadad
   workflow_dispatch: {}
   repository_dispatch:
     types: pipeline_b79adf13-59e8-4a5a-8fdd-4c3f27fa3b46
