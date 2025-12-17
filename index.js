@@ -8,10 +8,6 @@ let configPath = process.env.CONFIG_PATH || "/app/config/config.json";
 
 try {
   if (fs.existsSync(configPath)) {
-    // If it's a directory, try config.json inside it
-    if (fs.lstatSync(configPath).isDirectory()) {
-      configPath = path.join(configPath, "config.json");
-    }
 
     if (fs.existsSync(configPath)) {
       console.log(`Loading config from ${configPath}`);
