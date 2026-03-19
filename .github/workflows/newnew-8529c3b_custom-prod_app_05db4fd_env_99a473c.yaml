@@ -10,7 +10,7 @@ name: newnew-8529c3b_custom-prod_app_05db4fd_env_99a473c Pipeline (Skyu Generate
       - README.md
   workflow_dispatch: {}
   repository_dispatch:
-    types: pipeline_b547a5be-4372-4063-b83a-8ad5d600b0f4
+    types: pipeline_77afade4-8403-4ff4-98ab-1685aed4c757
 env:
   ENCODED_PIPELINE_SECRET: ${{secrets.ENVAPP_NEWNEW8529C3B_CUSTOMPROD_APP_05DB4FD_ENV_99A473C}}
   COMMIT_ID: ${{github.event.client_payload.commitId || github.sha || github.run_id}}
