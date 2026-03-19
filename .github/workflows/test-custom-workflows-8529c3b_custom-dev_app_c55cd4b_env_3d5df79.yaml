@@ -12,7 +12,7 @@ name: >-
       - README.md
   workflow_dispatch: {}
   repository_dispatch:
-    types: pipeline_19713ec1-00c6-4493-9bf9-988adb3a7a30
+    types: pipeline_4d712dbb-b7cc-4b70-9909-08e705659716
 env:
   ENCODED_PIPELINE_SECRET: >-
     ${{secrets.ENVAPP_TESTCUSTOMWORKFLOWS8529C3B_CUSTOMDEV_APP_C55CD4B_ENV_3D5DF79}}
