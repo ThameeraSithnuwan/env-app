@@ -12,7 +12,7 @@ name: >-
       - README.md
   workflow_dispatch: {}
   repository_dispatch:
-    types: pipeline_6f01f8e8-e4e7-4ac6-917d-0788ac306d01
+    types: pipeline_8775058b-f75e-4a9a-871d-571161a47a65
 env:
   ENCODED_PIPELINE_SECRET: ${{secrets.ENVAPP_CUSTOMTESTAPP1E46CA94_CUSTOMPROD_APP_F9FC235_ENV_99A473C}}
   COMMIT_ID: ${{github.event.client_payload.commitId || github.sha || github.run_id}}
