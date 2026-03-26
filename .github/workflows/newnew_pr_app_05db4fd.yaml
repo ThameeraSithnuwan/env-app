@@ -6,7 +6,7 @@ name: newnew_pr_app_05db4fd Pipeline (Skyu Generated)
       - synchronize
   workflow_dispatch: {}
   repository_dispatch:
-    types: pipeline_2ee00470-ffb1-43e0-81a1-a97d206e7910
+    types: pipeline_d8e670a9-8505-42f6-9248-cfeb0d1d8272
 env:
   ENCODED_PIPELINE_SECRET: ${{secrets.ENVAPP_NEWNEW_PR_APP_05DB4FD}}
   COMMIT_ID: ${{github.event.client_payload.commitId || github.sha || github.run_id}}
