@@ -13,7 +13,7 @@ name: >-
       - README.md
   workflow_dispatch: {}
   repository_dispatch:
-    types: pipeline_86aeae20-ca25-4f60-954b-9ed593fd1044
+    types: pipeline_90e1e3bb-176b-4eb4-ae2a-d909b9e462a7
 env:
   ENCODED_PIPELINE_SECRET: ${{secrets.ENVAPP_NEWNEW8529C3B_CUSTOMSTAGING_APP_05DB4FD_ENV_27281DB}}
   COMMIT_ID: ${{github.event.client_payload.commitId || github.sha || github.run_id}}
@@ -152,6 +152,8 @@ jobs:
                   docker run --rm -v "${PWD}:/src" aquasec/trivy:0.69.3 fs /src --format json --quiet --report summary --dependency-tree > trivy_results.json
                   # Minifying Json
                   jq -c '.' trivy_results.json > trivy_results.min.json
+                  # Generating SBOM in CycloneDX format
+                  docker run --rm -v "${PWD}:/src" aquasec/trivy:0.69.3 fs /src --format cyclonedx --output /src/sbom.json
                   
       - name: 'Run :: Upload Code Scan Reports'
         env:
@@ -197,6 +199,16 @@ jobs:
                   echo "Uploading Trivy Ignore File" 
                   if [ -f ".trivyignore" ]; then
                     response=$(curl -X POST -F 'file=@.trivyignore' -F 'provider=aws' -F 'resourceType=trivy-ignore' -F 'cloudStoragePath=/${{ env.PIPELINE_APPLICATION_ID }}/trivy-ignore-file/${{ env.COMMIT_ID }}/' -F 'pipelineRunId=${{ env.RUN_ID }}'  -H 'Authorization: ${{ env.SERVICE_ACC_ACCESS_TOKEN }}' -H 'x-organization-id: ${{ env.PIPELINE_ORGANIZATION_ID }}' -H 'x-project-id: ${{ env.PIPELINE_PROJECT_ID }}' -H 'x-environment-id: ${{ env.PIPELINE_ENVIRONMENT_ID }}' -H 'x-trace-id: ${{ env.PIPELINE_TRACE_ID }}' -H 'x-resource-id: ${{ env.PIPELINE_APPLICATION_ID }}' -H 'x-auth-by: sa' -H 'Content-Type: multipart/form-data'  "${{ env.S3_UPLOAD_ENDPOINT }}")
+
+                    if echo "$response" | grep -q '"success":true'; then
+                      echo "SUCCESS :: $response"
+                    else
+                      echo "FAILED :: $response"
+                    fi
+
+                  echo "Uploading SBOM File" 
+                  if [ -f "sbom.json" ]; then
+                    response=$(curl -X POST -F 'file=@sbom.json' -F 'provider=aws' -F 'resourceType=sbom' -F 'cloudStoragePath=/${{ env.PIPELINE_APPLICATION_ID }}/sbom-file/${{ env.COMMIT_ID }}/' -F 'pipelineRunId=${{ env.RUN_ID }}'  -H 'Authorization: ${{ env.SERVICE_ACC_ACCESS_TOKEN }}' -H 'x-organization-id: ${{ env.PIPELINE_ORGANIZATION_ID }}' -H 'x-project-id: ${{ env.PIPELINE_PROJECT_ID }}' -H 'x-environment-id: ${{ env.PIPELINE_ENVIRONMENT_ID }}' -H 'x-trace-id: ${{ env.PIPELINE_TRACE_ID }}' -H 'x-resource-id: ${{ env.PIPELINE_APPLICATION_ID }}' -H 'x-auth-by: sa' -H 'Content-Type: multipart/form-data'  "${{ env.S3_UPLOAD_ENDPOINT }}")
 
                     if echo "$response" | grep -q '"success":true'; then
                       echo "SUCCESS :: $response"
