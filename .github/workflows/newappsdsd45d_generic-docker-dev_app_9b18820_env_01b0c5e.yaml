@@ -5,6 +5,11 @@ name: >-
   push:
     branches:
       - main
+    paths-ignore:
+      - .github/workflows/**
+      - .trivyignore
+      - Readme.md
+      - README.md
   workflow_dispatch: {}
   repository_dispatch:
     types: pipeline_2eba5fac-d7a8-4a59-acfd-e817b99f88ba
@@ -905,6 +910,7 @@ jobs:
             
     needs:
       - build-and-push
+      - _status_testing
     permissions: write-all
     if: >-
       needs.build-and-push.outputs.stepsCanProceed == 'true' &&
